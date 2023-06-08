@@ -21,6 +21,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// Route::get('/user', [UserController::class, "checkLogStatus"])->middleware();
+
 Route::post('register',[UserController::class, 'register']);
 Route::post('login',[UserController::class,'login'])->middleware("guest");
 Route::post('forget-password',[ UserController::class,'forgetPassword']);
@@ -105,7 +107,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('place-autocomplete-api', [ API\CommonController::class, 'placeAutoComplete' ] );
     Route::get('place-detail-api', [ API\CommonController::class, 'placeDetail' ] );
     
-    Route::get('logout', [ UserController::class, 'logout' ]);
+  
     Route::get('wallet-detail', [ API\WalletController::class, 'getWallatDetail'] );
 
     Route::get('client-dashboard', [ API\DashboardController::class, 'clientDashboard' ]);
@@ -117,3 +119,5 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('vehicle-delete/{id}', [ App\Http\Controllers\VehicleController::class, 'destroy' ] );
     Route::post('vehicle-action', [ App\Http\Controllers\VehicleController::class, 'action' ] );
 });
+
+Route::get('logout', [UserController::class, 'logout' ])->middleware("web");

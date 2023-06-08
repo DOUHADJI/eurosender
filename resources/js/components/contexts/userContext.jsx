@@ -12,8 +12,8 @@ export const UserContextProvider = ({children}) => {
     const context = {user, setUser}
 
     const getUser = async () => {
-        const res = await getWithAxios('/user')
-        
+        const res = await getWithAxios('/api/user')
+        console.log(res)
          setUser(res.user)
     }
 

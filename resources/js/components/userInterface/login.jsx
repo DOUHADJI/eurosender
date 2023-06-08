@@ -22,6 +22,8 @@ const Login = () => {
         }
         const data = await postWithAxios("/api/login", dataToSend)
 
+        console.log(data)
+
         if(data.errors)
         {
             setErrors(data.errors)
@@ -29,7 +31,7 @@ const Login = () => {
 
         if(data.status== "success")
         {
-            setUser(data.data.user)
+            setUser(data.user)
             navigate("/account/dashboard")
         }
 

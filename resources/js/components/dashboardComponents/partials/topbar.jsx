@@ -9,10 +9,10 @@ const Topbar = () => {
     const navigate = useNavigate()
 
     const handleLogout = async() => {
-     
+  
         const data = await getWithAxios("/api/logout")
         console.log(data)
-        if(data.status == "sucsess")
+        if(data.status == "success")
         {
             navigate("/")
             setUser(null)
@@ -67,6 +67,8 @@ const Topbar = () => {
         
 
         <div className="topbar-divider d-none d-sm-block"></div>
+
+     
 
         {/* Nav Item - User Information */}
         <li className="nav-item dropdown no-arrow">
