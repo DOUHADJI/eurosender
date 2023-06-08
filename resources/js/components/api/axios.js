@@ -72,3 +72,16 @@ export const getUserFromAPI = async () => {
 
 
 
+export const checkLogStatus = async () => {
+
+  const res = await getWithAxios("/api/check-log-status")
+  
+  if(res.status == "success")
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}

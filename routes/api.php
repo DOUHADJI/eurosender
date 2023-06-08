@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-// Route::get('/user', [UserController::class, "checkLogStatus"])->middleware();
+ Route::get('/check-log-status', [UserController::class, "checkLogStatus"]);
 
 Route::post('register',[UserController::class, 'register']);
 Route::post('login',[UserController::class,'login'])->middleware("guest");
@@ -40,6 +40,8 @@ Route::get('paymentgateway-list',[API\PaymentGatewayController::class,'getList']
 Route::get('vehicle-list', [ API\VehicleController::class, 'getList' ] );
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+
+    Route::get('logout', [UserController::class, 'logout' ]);
 
     Route::get('dashboard-detail', [ UserController::class, 'dashboard' ]);
     Route::get('dashboard-chartdata', [ UserController::class, 'dashboardChartData' ]);
@@ -120,4 +122,3 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('vehicle-action', [ App\Http\Controllers\VehicleController::class, 'action' ] );
 });
 
-Route::get('logout', [UserController::class, 'logout' ])->middleware("web");
