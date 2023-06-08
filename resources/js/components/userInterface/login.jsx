@@ -1,30 +1,68 @@
-import { useEffect, useRef, useState } from "react";
-import { postWithAxios } from "../api/axios";
+import { useContext, useEffect, useRef, useState } from "react";
+import { postWithAxios, getCsrfToken } from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../contexts/userContext";
 
 const Login = () => {
     const [email,setEmail] = useState("")
     const [password,setpassword] = useState("")
+    const [errors, setErrors] = useState({})
     const passInput = useRef(null)
+    const emailInput = useRef(null)
+    const {user, setUser} = useContext(UserContext)
     const navigate = useNavigate()
 
     const handleLogin = async (e) => {
         e.preventDefault()
-       const token = await getCsrfToken()
+        const token = await getCsrfToken()
        
         const dataToSend = {
             email : email,
             password : password
         }
-        console.log(token, dataToSend)
         const data = await postWithAxios("/api/login", dataToSend)
+
+        if(data.errors)
+        {
+            setErrors(data.errors)
+        }
+
+        if(data.status== "success")
+        {
+            setUser(data.data.user)
+            navigate("/account/dashboard")
+        }
+
         console.log(data)
-        navigate("/dashboard")
+        
     }
 
     useEffect(() =>{
         document.title = "Eurosender - Login page"
     },[])
+
+    useEffect(()=>{
+        if(errors.email)
+        {
+            emailInput.current.classList.add("is-invalid")
+        }
+        else
+        {
+            emailInput.current.classList.remove("is-invalid") 
+        }
+    },[errors])
+
+    
+    useEffect(()=>{
+        if(errors.password)
+        {
+            passInput.current.classList.add("is-invalid")
+        }
+        else
+        {
+            passInput.current.classList.remove("is-invalid") 
+        }
+    },[errors])
     return (
         <div className="container">
             {/* Outer Row  */}
@@ -42,23 +80,35 @@ const Login = () => {
                                                 Welcome Back!
                                             </h1>
                                         </div>
-                                        <form className="user">
+                                        <form className="user" onSubmit={handleLogin}>
                                             <div className="form-group">
                                                 <input
+                                                ref={emailInput}
                                                     type="email"
                                                     className="form-control form-control-user"
                                                     id="exampleInputEmail"
                                                     aria-describedby="emailHelp"
                                                     placeholder="Enter Email Address..."
+                                                    value={email}
+                                                    onChange={e => setEmail(e.target.value)}
                                                 />
+                                                <span className="text-danger">
+                                                    {errors?.email}
+                                                </span>
                                             </div>
                                             <div className="form-group">
                                                 <input
+                                                ref={passInput}
                                                     type="password"
                                                     className="form-control form-control-user"
                                                     id="exampleInputPassword"
                                                     placeholder="Password"
+                                                    value={password}
+                                                    onChange={e => setpassword(e.target.value)}
                                                 />
+                                                <span className="text-danger text-center py-4">
+                                                    {errors?.password}
+                                                </span>
                                             </div>
                                             <div className="form-group">
                                                 <div className="custom-control custom-checkbox small">
@@ -69,18 +119,21 @@ const Login = () => {
                                                     />
                                                     <label
                                                         className="custom-control-label"
-                                                        for="customCheck"
+                                                        htmlFor="customCheck"
                                                     >
                                                         Remember Me
                                                     </label>
                                                 </div>
                                             </div>
-                                            <a
-                                                href="index.html"
+                                            <span className="text-danger">
+                                                    {errors?.message}
+                                                </span>
+                                            <button
+                                                
                                                 className="btn btn-primary btn-user btn-block"
                                             >
                                                 Login
-                                            </a>
+                                            </button>
                                             <hr />
                                             <a
                                                 href="index.html"

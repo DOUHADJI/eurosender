@@ -1,5 +1,6 @@
 import axios from 'axios'
 
+
 export const axiosInstance = () => {
   const axiosInstance = axios.create({
    // baseURL: import.meta.env.VITE_API_URL,
@@ -7,12 +8,18 @@ export const axiosInstance = () => {
       headers: {
         Accept: 'application/json',
       },
+      
     },
+    withCredentials : true
      /* timeout: 5000, */
   })
 
+ // axios.defaults.headers.common['X-CSRF-TOKEN'] = token;
+  
   return axiosInstance
 }
+
+
 
 export const getCsrfToken = async () => {
   try {
