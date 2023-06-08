@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.8">
 
-    <title>Laravel</title>
+    <title>{{ env('APP_NAME') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -12,6 +12,9 @@
 
     <!-- Styles -->
     <link href="{{ asset("deps/sb-admin-2.css") }}" rel="stylesheet">
+
+    <!-- Custom styles for this page -->
+    <link href="{{ asset("deps/datatables/dataTables.bootstrap4.min.css")}}" rel="stylesheet">
 
     @viteReactRefresh
     @vite('resources/js/app.js')
@@ -35,6 +38,10 @@
 
     <!-- Custom scripts for all pages-->
     <script src="{{ asset("deps/js/sb-admin-2.min.js")}}"></script>
+
+    <!-- Page level plugins -->
+    <script src="{{ asset("deps/datatables/jquery.dataTables.min.js")}}"></script>
+    <script src="{{ asset("deps/datatables/dataTables.bootstrap4.min.js")}}"></script>
 
 
 

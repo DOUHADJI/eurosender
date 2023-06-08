@@ -6,6 +6,8 @@ import Index from "./userInterface";
 import Login from "./userInterface/login";
 import { UserContextProvider } from "./contexts/userContext";
 import UserDashboard from "./userInterface/userDashboard/userDashboard";
+import PlaceOrder from "./userInterface/userDashboard/placeOrder";
+import CountriesAndCities from "./adminInterface/countriesAndCities";
 
 const router = createBrowserRouter([
     {
@@ -22,6 +24,16 @@ const router = createBrowserRouter([
         path: "/account/dashboard",
         element: <UserDashboard />
     },
+
+    {
+        path : "/account/dashboard/place-new-order",
+        element : <PlaceOrder />
+    },
+
+    {
+        path : '/account/dashboard/countries-cities',
+        element : <CountriesAndCities/>
+    }
 ]);
 
 if (document.getElementById("root")) {

@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { postWithAxios, getCsrfToken } from "../api/axios";
+import { postWithAxios, getCsrfToken, checkLogStatus } from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../contexts/userContext";
 
@@ -32,16 +32,44 @@ const Login = () => {
         if(data.status== "success")
         {
             setUser(data.user)
-            navigate("/account/dashboard")
+
+            if(data.user.user_type == "user")
+            {
+                navigate("/account/dashboard/place-new-order")
+                document.location.reload()
+            }
+
+            if(data.user.user_type == "admin")
+            {
+                navigate("/account/dashboard")
+                document.location.reload()
+            }
+           
         }
 
         console.log(data)
         
     }
 
+
+    const checkUserStatus = async () => {
+        const isConnected = await checkLogStatus()
+
+        if(isConnected)
+        {
+            navigate("/")
+        }
+
+      
+    }
+
     useEffect(() =>{
         document.title = "Eurosender - Login page"
     },[])
+
+    useEffect(() => {
+        checkUserStatus()
+    }, [])
 
     useEffect(()=>{
         if(errors.email)
@@ -65,6 +93,7 @@ const Login = () => {
             passInput.current.classList.remove("is-invalid") 
         }
     },[errors])
+
     return (
         <div className="container">
             {/* Outer Row  */}

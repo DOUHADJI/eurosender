@@ -1,4 +1,4 @@
-import {createContext, useEffect, useState } from "react";
+import {createContext, useEffect, useMemo, useState } from "react";
 import { getWithAxios } from "../api/axios";
 
 
@@ -11,9 +11,10 @@ export const UserContextProvider = ({children}) => {
 
     const context = {user, setUser}
 
+    const contextMemo = useMemo(() => context,[user])
+
     const getUser = async () => {
         const user = await getWithAxios('/api/user')
-        console.log(user)
          setUser(user)
     }
 
@@ -23,7 +24,7 @@ export const UserContextProvider = ({children}) => {
     },[user])
 
     return(
-        <UserContext.Provider value={context}>
+        <UserContext.Provider value={contextMemo}>
             {children}
         </UserContext.Provider>
     )

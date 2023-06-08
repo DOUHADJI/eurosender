@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
 use App\Http\Controllers\API;
+use App\Http\Controllers\CityController;
+use App\Http\Controllers\CountryController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -22,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
  Route::get('/check-log-status', [UserController::class, "checkLogStatus"]);
+ Route::get('country-list', [ CountryController::class, 'get_country_list' ]);
 
 Route::post('register',[UserController::class, 'register']);
 Route::post('login',[UserController::class,'login'])->middleware("guest");
@@ -31,10 +34,9 @@ Route::get('user-list',[UserController::class, 'userList']);
 Route::get('staticdata-list',[API\StaticDataController::class,'getList']);
 
 Route::get('user-detail',[UserController::class, 'userDetail']);
-Route::get('country-list', [ API\CountryController::class, 'getList' ] );
-Route::get('country-detail', [ API\CountryController::class, 'getDetail' ] );
-Route::get('city-list', [ API\CityController::class, 'getList' ] );
-Route::get('city-detail', [ API\CityController::class, 'getDetail' ] );
+Route::get('country-detail', [ CountryController::class, 'getDetail' ] );
+Route::get('city-list', [ CityController::class, 'getList' ] );
+Route::get('city-detail', [ CityController::class, 'getDetail' ] );
 Route::get('extracharge-list', [ API\ExtraChargeController::class, 'getList' ] );
 Route::get('paymentgateway-list',[API\PaymentGatewayController::class,'getList']);
 Route::get('vehicle-list', [ API\VehicleController::class, 'getList' ] );
@@ -46,13 +48,13 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('dashboard-detail', [ UserController::class, 'dashboard' ]);
     Route::get('dashboard-chartdata', [ UserController::class, 'dashboardChartData' ]);
 
-    Route::post('country-save', [ App\Http\Controllers\CountryController::class, 'store' ] );
-    Route::post('country-delete/{id}', [ App\Http\Controllers\CountryController::class, 'destroy' ] );
-    Route::post('country-action', [ App\Http\Controllers\CountryController::class, 'action' ] );
+    Route::post('country-save', [ CountryController::class, 'store' ] );
+    Route::post('country-delete/{id}', [ CountryController::class, 'destroy' ] );
+    Route::post('country-action', [ CountryController::class, 'action' ] );
 
-    Route::post('city-save', [ App\Http\Controllers\CityController::class, 'store' ] );
-    Route::post('city-delete/{id}', [ App\Http\Controllers\CityController::class, 'destroy' ] );
-    Route::post('city-action', [ App\Http\Controllers\CityController::class, 'action' ] );
+    Route::post('city-save', [CityController::class, 'store' ] );
+    Route::post('city-delete/{id}', [CityController::class, 'destroy' ] );
+    Route::post('city-action', [CityController::class, 'action' ] );
 
     Route::post('extracharge-save', [ App\Http\Controllers\ExtraChargeController::class, 'store' ] );
     Route::post('extracharge-delete/{id}', [ App\Http\Controllers\ExtraChargeController::class, 'destroy' ] );

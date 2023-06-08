@@ -6,7 +6,7 @@ import { checkLogStatus } from "../api/axios"
 import { useNavigate } from "react-router-dom"
 
 
-const DashboardLayout = () => {
+const DashboardLayout = ({children}) => {
     const{user,setUser} = useContext(UserContext)
     const navigate = useNavigate()
 
@@ -18,10 +18,7 @@ const DashboardLayout = () => {
             navigate("/")
         }
 
-       /*  if(isConnected)
-        {
-            setLoading(false);
-        } */
+      
     }
 
     useEffect(() => {
@@ -34,7 +31,7 @@ const DashboardLayout = () => {
                 <div id="content">
                     <Topbar/>
                     <div>
-                        
+                        {children}
                     </div>
 
                 </div>
