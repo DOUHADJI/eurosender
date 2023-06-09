@@ -1,0 +1,1942 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.0
+-- https://www.phpmyadmin.net/
+--
+-- Hôte : 127.0.0.1
+-- Généré le : ven. 09 juin 2023 à 11:11
+-- Version du serveur : 10.4.27-MariaDB
+-- Version de PHP : 8.2.0
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Base de données : `eurosender`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `app_settings`
+--
+
+CREATE TABLE `app_settings` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `site_name` varchar(255) DEFAULT NULL,
+  `site_email` varchar(255) DEFAULT NULL,
+  `site_description` longtext DEFAULT NULL,
+  `site_copyright` varchar(255) DEFAULT NULL,
+  `facebook_url` varchar(255) DEFAULT NULL,
+  `twitter_url` varchar(255) DEFAULT NULL,
+  `linkedin_url` varchar(255) DEFAULT NULL,
+  `instagram_url` varchar(255) DEFAULT NULL,
+  `support_number` varchar(255) DEFAULT NULL,
+  `support_email` varchar(255) DEFAULT NULL,
+  `notification_settings` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`notification_settings`)),
+  `auto_assign` tinyint(4) DEFAULT 0,
+  `distance_unit` varchar(255) DEFAULT NULL COMMENT 'km, mile',
+  `distance` double DEFAULT 0,
+  `otp_verify_on_pickup_delivery` tinyint(4) DEFAULT 1,
+  `currency` varchar(255) DEFAULT NULL,
+  `currency_code` varchar(255) DEFAULT NULL,
+  `currency_position` varchar(255) DEFAULT NULL,
+  `is_vehicle_in_order` tinyint(4) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `cities`
+--
+
+CREATE TABLE `cities` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `country_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `fixed_charges` double DEFAULT 0,
+  `cancel_charges` double DEFAULT 0,
+  `min_distance` double DEFAULT 0,
+  `min_weight` double DEFAULT 0,
+  `per_distance_charges` double DEFAULT 0,
+  `per_weight_charges` double DEFAULT 0,
+  `status` tinyint(4) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `commission_type` varchar(255) DEFAULT NULL COMMENT 'fixed, percentage',
+  `admin_commission` double DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `countries`
+--
+
+CREATE TABLE `countries` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `code` varchar(255) DEFAULT NULL,
+  `distance_type` varchar(255) DEFAULT NULL,
+  `weight_type` varchar(255) DEFAULT NULL,
+  `links` longtext DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `countries`
+--
+
+INSERT INTO `countries` (`id`, `name`, `code`, `distance_type`, `weight_type`, `links`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(2, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(3, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(4, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(5, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(6, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(7, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(8, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(9, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(10, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(11, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(12, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(13, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(14, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(15, 'San Marino', 'SM', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(16, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(17, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(18, 'Australia', 'AU', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(19, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(20, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(21, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(22, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(23, 'South Korea', 'KR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(24, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(25, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(26, 'Costa Rica', 'CR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(27, 'Albania', 'AL', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(28, 'Madagascar', 'MG', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(29, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(30, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(31, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(32, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(33, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(34, 'Ecuador', 'EC', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(35, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(36, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(37, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(38, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(39, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(40, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(41, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(42, 'Serbia', 'RS', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(43, 'Cameroon', 'CM', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(44, 'Comoros', 'KM', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(45, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(46, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(47, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(48, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(49, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(50, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(51, 'Kazakhstan', 'KZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(52, 'Malaysia', 'MY', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(53, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(54, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(55, 'Macedonia', 'MK', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(56, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(57, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(58, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(59, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(60, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(61, 'Mayotte', 'YT', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(62, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(63, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(64, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(65, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(66, 'Armenia', 'AM', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(67, 'Bangladesh', 'BD', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(68, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(69, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(70, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:11', '2023-06-08 14:06:11', NULL),
+(71, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(72, 'Kazakhstan', 'KZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(73, 'Namibia', 'NA', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(74, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(75, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(76, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(77, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(78, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(79, 'Comoros', 'KM', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(80, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(81, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(82, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(83, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(84, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(85, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(86, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(87, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(88, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(89, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(90, 'Serbia', 'RS', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(91, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(92, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(93, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(94, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(95, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(96, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(97, 'Spain', 'ES', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(98, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(99, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(100, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(101, 'Venezuela', 'VE', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(102, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(103, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(104, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(105, 'Venezuela', 'VE', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(106, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(107, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(108, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(109, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(110, 'Pakistan', 'PK', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(111, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(112, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(113, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(114, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(115, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(116, 'Ecuador', 'EC', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(117, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(118, 'Kenya', 'KE', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(119, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(120, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(121, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(122, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(123, 'Guatemala', 'GT', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(124, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(125, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(126, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(127, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(128, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(129, 'Bulgaria', 'BG', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(130, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(131, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(132, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(133, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(134, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(135, 'Denmark', 'DK', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(136, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(137, 'Egypt', 'EG', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(138, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(139, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(140, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(141, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(142, 'Liechtenstein', 'LI', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(143, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(144, 'Uganda', 'UG', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(145, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:12', '2023-06-08 14:06:12', NULL),
+(146, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(147, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(148, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(149, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(150, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(151, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(152, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(153, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(154, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(155, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(156, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(157, 'Italy', 'IT', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(158, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(159, 'Malaysia', 'MY', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(160, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(161, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(162, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(163, 'Togo', 'TG', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(164, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(165, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(166, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(167, 'South Korea', 'KR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(168, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(169, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(170, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(171, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(172, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(173, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(174, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(175, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(176, 'Slovenia', 'SI', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(177, 'Ecuador', 'EC', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(178, 'Syria', 'SY', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(179, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(180, 'Morocco', 'MA', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(181, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(182, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(183, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(184, 'Netherlands', 'NL', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(185, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(186, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(187, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(188, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(189, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(190, 'Afghanistan', 'AF', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(191, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(192, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(193, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(194, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(195, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(196, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(197, 'Benin', 'BJ', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(198, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(199, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(200, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(201, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(202, 'Sudan', 'SD', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(203, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(204, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(205, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(206, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(207, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(208, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(209, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(210, 'Iran', 'IR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(211, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(212, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(213, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(214, 'Burkina Faso', 'BF', NULL, NULL, NULL, 1, '2023-06-08 14:06:13', '2023-06-08 14:06:13', NULL),
+(215, 'Bulgaria', 'BG', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(216, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(217, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(218, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(219, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(220, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(221, 'Slovenia', 'SI', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(222, 'Panama', 'PA', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(223, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(224, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(225, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(226, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(227, 'Maldives', 'MV', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(228, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(229, 'Uganda', 'UG', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(230, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(231, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(232, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(233, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(234, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(235, 'Senegal', 'SN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(236, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(237, 'Cuba', 'CU', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(238, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(239, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(240, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(241, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:14', '2023-06-08 14:06:14', NULL),
+(242, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(243, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(244, 'Netherlands', 'NL', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(245, 'Cuba', 'CU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(246, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(247, 'Serbia', 'RS', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(248, 'Madagascar', 'MG', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(249, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(250, 'United Kingdom', 'GB', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(251, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(252, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(253, 'Uzbekistan', 'UZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(254, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(255, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(256, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(257, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(258, 'Mozambique', 'MZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(259, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(260, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(261, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(262, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(263, 'Israel', 'IL', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(264, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(265, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(266, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(267, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(268, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(269, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(270, 'Dominican Republic', 'DO', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(271, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(272, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(273, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(274, 'Uruguay', 'UY', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(275, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(276, 'Belarus', 'BY', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(277, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(278, 'Afghanistan', 'AF', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(279, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(280, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(281, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(282, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(283, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(284, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(285, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(286, 'Armenia', 'AM', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(287, 'Papua New Guinea', 'PG', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(288, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(289, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(290, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(291, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(292, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(293, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(294, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(295, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(296, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(297, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(298, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(299, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(300, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(301, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(302, 'American Samoa', 'AS', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(303, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(304, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(305, 'Republic of the Congo', 'CG', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(306, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(307, 'Malaysia', 'MY', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(308, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(309, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:15', '2023-06-08 14:06:15', NULL),
+(310, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(311, 'Ethiopia', 'ET', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(312, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(313, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(314, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(315, 'Luxembourg', 'LU', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(316, 'Finland', 'FI', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(317, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(318, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(319, 'Estonia', 'EE', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(320, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(321, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(322, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(323, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(324, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(325, 'Bangladesh', 'BD', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(326, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(327, 'Mongolia', 'MN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(328, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(329, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(330, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(331, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(332, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(333, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(334, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(335, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(336, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(337, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(338, 'Syria', 'SY', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(339, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(340, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(341, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(342, 'Puerto Rico', 'PR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(343, 'Dominican Republic', 'DO', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(344, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(345, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(346, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(347, 'Zambia', 'ZM', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(348, 'Morocco', 'MA', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(349, 'New Zealand', 'NZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(350, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(351, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(352, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(353, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(354, 'Uzbekistan', 'UZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(355, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(356, 'Jordan', 'JO', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(357, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(358, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(359, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(360, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(361, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(362, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(363, 'Venezuela', 'VE', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(364, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(365, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(366, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(367, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(368, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(369, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(370, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(371, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(372, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(373, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(374, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(375, 'East Timor', 'TL', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(376, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(377, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:16', '2023-06-08 14:06:16', NULL),
+(378, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(379, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(380, 'Belarus', 'BY', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(381, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(382, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(383, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(384, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(385, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(386, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(387, 'Aland Islands', 'AX', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(388, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(389, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(390, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(391, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(392, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(393, 'Myanmar', 'MM', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(394, 'Pakistan', 'PK', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(395, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(396, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(397, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(398, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(399, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(400, 'Cuba', 'CU', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(401, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(402, 'Tunisia', 'TN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(403, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(404, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(405, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(406, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(407, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(408, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(409, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(410, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(411, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(412, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(413, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(414, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(415, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(416, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(417, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(418, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(419, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(420, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(421, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(422, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(423, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(424, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(425, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(426, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(427, 'Chile', 'CL', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(428, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(429, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(430, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(431, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(432, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(433, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(434, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(435, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(436, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(437, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(438, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(439, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(440, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(441, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(442, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(443, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(444, 'United Arab Emirates', 'AE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(445, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(446, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(447, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(448, 'Pakistan', 'PK', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(449, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(450, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:17', '2023-06-08 14:06:17', NULL),
+(451, 'Uruguay', 'UY', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(452, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(453, 'South Korea', 'KR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(454, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(455, 'Latvia', 'LV', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(456, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(457, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(458, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(459, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(460, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(461, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(462, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(463, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(464, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(465, 'Mongolia', 'MN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(466, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(467, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(468, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(469, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(470, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(471, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(472, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(473, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(474, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(475, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(476, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(477, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(478, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(479, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(480, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(481, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(482, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(483, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(484, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(485, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(486, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(487, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(488, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(489, 'Guatemala', 'GT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(490, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(491, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(492, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(493, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(494, 'Slovenia', 'SI', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(495, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(496, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(497, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(498, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(499, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(500, 'Iran', 'IR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(501, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(502, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(503, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(504, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(505, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(506, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(507, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(508, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(509, 'Tajikistan', 'TJ', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(510, 'Albania', 'AL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(511, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(512, 'Chile', 'CL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(513, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(514, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(515, 'Comoros', 'KM', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(516, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(517, 'Kazakhstan', 'KZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(518, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(519, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(520, 'Central African Republic', 'CF', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(521, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(522, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL);
+INSERT INTO `countries` (`id`, `name`, `code`, `distance_type`, `weight_type`, `links`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(523, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(524, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(525, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(526, 'Yemen', 'YE', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(527, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(528, 'Netherlands', 'NL', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(529, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(530, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(531, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(532, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:18', '2023-06-08 14:06:18', NULL),
+(533, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(534, 'Cameroon', 'CM', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(535, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(536, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(537, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(538, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(539, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(540, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(541, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(542, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(543, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(544, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(545, 'Albania', 'AL', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(546, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(547, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(548, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(549, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(550, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(551, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(552, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(553, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(554, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(555, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(556, 'Malawi', 'MW', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(557, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(558, 'Italy', 'IT', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(559, 'South Korea', 'KR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(560, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(561, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(562, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(563, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(564, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(565, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(566, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(567, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(568, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(569, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(570, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(571, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(572, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(573, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(574, 'Macedonia', 'MK', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(575, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(576, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(577, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(578, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(579, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(580, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(581, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(582, 'Mongolia', 'MN', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(583, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(584, 'Nicaragua', 'NI', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(585, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(586, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(587, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(588, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(589, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(590, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(591, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(592, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(593, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(594, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(595, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(596, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(597, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(598, 'South Korea', 'KR', NULL, NULL, NULL, 1, '2023-06-08 14:06:19', '2023-06-08 14:06:19', NULL),
+(599, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(600, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(601, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(602, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(603, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(604, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(605, 'Latvia', 'LV', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(606, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(607, 'Macedonia', 'MK', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(608, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(609, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(610, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(611, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(612, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(613, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(614, 'Uruguay', 'UY', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(615, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(616, 'Tunisia', 'TN', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(617, 'Nepal', 'NP', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(618, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(619, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(620, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(621, 'Paraguay', 'PY', NULL, NULL, NULL, 1, '2023-06-08 14:06:20', '2023-06-08 14:06:20', NULL),
+(622, 'Ecuador', 'EC', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(623, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(624, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(625, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(626, 'Slovenia', 'SI', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(627, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(628, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(629, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(630, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(631, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(632, 'Senegal', 'SN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(633, 'Iran', 'IR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(634, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(635, 'Kenya', 'KE', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(636, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(637, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(638, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(639, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(640, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(641, 'Chad', 'TD', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(642, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(643, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(644, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(645, 'Cuba', 'CU', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(646, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(647, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(648, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(649, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(650, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(651, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(652, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(653, 'Netherlands', 'NL', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(654, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(655, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(656, 'Egypt', 'EG', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(657, 'Albania', 'AL', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(658, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(659, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(660, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(661, 'Lebanon', 'LB', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(662, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(663, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(664, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(665, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(666, 'Israel', 'IL', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(667, 'Lithuania', 'LT', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(668, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(669, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(670, 'Malta', 'MT', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(671, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(672, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:21', '2023-06-08 14:06:21', NULL),
+(673, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(674, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(675, 'Estonia', 'EE', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(676, 'Venezuela', 'VE', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(677, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(678, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(679, 'Latvia', 'LV', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(680, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(681, 'Pakistan', 'PK', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(682, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(683, 'Albania', 'AL', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(684, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(685, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(686, 'Tajikistan', 'TJ', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(687, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(688, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(689, 'Malaysia', 'MY', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(690, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(691, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(692, 'Hungary', 'HU', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(693, 'Nepal', 'NP', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(694, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(695, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(696, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(697, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(698, 'Syria', 'SY', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(699, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(700, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(701, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(702, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(703, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(704, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(705, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(706, 'Zambia', 'ZM', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(707, 'Zambia', 'ZM', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(708, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(709, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(710, 'Dominican Republic', 'DO', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(711, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(712, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(713, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(714, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:22', '2023-06-08 14:06:22', NULL),
+(715, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(716, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(717, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(718, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(719, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(720, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(721, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(722, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(723, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(724, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(725, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(726, 'Moldova', 'MD', NULL, NULL, NULL, 1, '2023-06-08 14:06:23', '2023-06-08 14:06:23', NULL),
+(727, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(728, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(729, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(730, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(731, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(732, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(733, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(734, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(735, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(736, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(737, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(738, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(739, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(740, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(741, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(742, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(743, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(744, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(745, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(746, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(747, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(748, 'Zambia', 'ZM', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(749, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(750, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(751, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(752, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(753, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(754, 'Bolivia', 'BO', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(755, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(756, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(757, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(758, 'Kuwait', 'KW', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(759, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(760, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(761, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(762, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(763, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(764, 'Yemen', 'YE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(765, 'Dominican Republic', 'DO', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(766, 'Kenya', 'KE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(767, 'Israel', 'IL', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(768, 'Malaysia', 'MY', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(769, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(770, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(771, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(772, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(773, 'Moldova', 'MD', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(774, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(775, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(776, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(777, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(778, 'Czech Republic', 'CZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(779, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(780, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(781, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(782, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(783, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(784, 'Tanzania', 'TZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(785, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(786, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(787, 'Azerbaijan', 'AZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(788, 'Syria', 'SY', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(789, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(790, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(791, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(792, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(793, 'Democratic Republic of the Congo', 'CD', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(794, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(795, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:24', '2023-06-08 14:06:24', NULL),
+(796, 'Chile', 'CL', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(797, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(798, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(799, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(800, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(801, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(802, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(803, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(804, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(805, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(806, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(807, 'United Kingdom', 'GB', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(808, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(809, 'Germany', 'DE', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(810, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(811, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(812, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(813, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(814, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(815, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(816, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(817, 'Cyprus', 'CY', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(818, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(819, 'Spain', 'ES', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(820, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(821, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(822, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(823, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(824, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(825, 'Armenia', 'AM', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(826, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(827, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(828, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(829, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(830, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(831, 'Panama', 'PA', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(832, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(833, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(834, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(835, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(836, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(837, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(838, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(839, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(840, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(841, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(842, 'Ghana', 'GH', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(843, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(844, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(845, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(846, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:25', '2023-06-08 14:06:25', NULL),
+(847, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(848, 'Kenya', 'KE', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(849, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(850, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(851, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(852, 'Bosnia and Herzegovina', 'BA', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(853, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(854, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(855, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(856, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(857, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(858, 'Canada', 'CA', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(859, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(860, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(861, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(862, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(863, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(864, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(865, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(866, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(867, 'Kazakhstan', 'KZ', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(868, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(869, 'Saint Pierre and Miquelon', 'PM', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(870, 'Jamaica', 'JM', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(871, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(872, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(873, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(874, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(875, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(876, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(877, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(878, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(879, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(880, 'Mexico', 'MX', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(881, 'Democratic Republic of the Congo', 'CD', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(882, 'Laos', 'LA', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(883, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(884, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(885, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(886, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(887, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(888, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(889, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(890, 'Latvia', 'LV', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(891, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(892, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(893, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(894, 'Vietnam', 'VN', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(895, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(896, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:26', '2023-06-08 14:06:26', NULL),
+(897, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(898, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(899, 'Yemen', 'YE', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(900, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(901, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(902, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(903, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(904, 'Botswana', 'BW', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(905, 'Mauritius', 'MU', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(906, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(907, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(908, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(909, 'Greece', 'GR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(910, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(911, 'Mongolia', 'MN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(912, 'Ukraine', 'UA', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(913, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(914, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(915, 'Norway', 'NO', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(916, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(917, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(918, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(919, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(920, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(921, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(922, 'Bolivia', 'BO', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(923, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(924, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(925, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(926, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(927, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(928, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(929, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(930, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(931, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(932, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(933, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(934, 'Argentina', 'AR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(935, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(936, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(937, 'Niger', 'NE', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(938, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(939, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(940, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(941, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(942, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(943, 'Martinique', 'MQ', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(944, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(945, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(946, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(947, 'Costa Rica', 'CR', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(948, 'Nigeria', 'NG', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(949, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(950, 'Honduras', 'HN', NULL, NULL, NULL, 1, '2023-06-08 14:06:27', '2023-06-08 14:06:27', NULL),
+(951, 'Palestinian Territory', 'PS', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(952, 'Niger', 'NE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(953, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(954, 'Chile', 'CL', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(955, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(956, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(957, 'Honduras', 'HN', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(958, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(959, 'Switzerland', 'CH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(960, 'France', 'FR', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(961, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(962, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(963, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(964, 'Peru', 'PE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(965, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(966, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(967, 'South Africa', 'ZA', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(968, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(969, 'Bulgaria', 'BG', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(970, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(971, 'Netherlands', 'NL', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(972, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(973, 'Bangladesh', 'BD', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(974, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(975, 'Ireland', 'IE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(976, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(977, 'Indonesia', 'ID', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(978, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(979, 'Brazil', 'BR', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(980, 'Iran', 'IR', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(981, 'Thailand', 'TH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(982, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(983, 'Japan', 'JP', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(984, 'Colombia', 'CO', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(985, 'United States', 'US', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(986, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(987, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(988, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(989, 'China', 'CN', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(990, 'Croatia', 'HR', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(991, 'Syria', 'SY', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(992, 'Bulgaria', 'BG', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(993, 'Portugal', 'PT', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(994, 'Sweden', 'SE', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(995, 'Russia', 'RU', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(996, 'Poland', 'PL', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(997, 'Saudi Arabia', 'SA', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(998, 'Ethiopia', 'ET', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(999, 'Philippines', 'PH', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL),
+(1000, 'Guatemala', 'GT', NULL, NULL, NULL, 1, '2023-06-08 14:06:28', '2023-06-08 14:06:28', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `delivery_man_documents`
+--
+
+CREATE TABLE `delivery_man_documents` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `document_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `is_verified` tinyint(4) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `documents`
+--
+
+CREATE TABLE `documents` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1,
+  `is_required` tinyint(4) DEFAULT 0,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `extra_charges`
+--
+
+CREATE TABLE `extra_charges` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `charges_type` varchar(255) NOT NULL COMMENT 'fixed, percentage',
+  `charges` double DEFAULT 0,
+  `country_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `city_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT 1 COMMENT '0-inactive , 1 - active',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `failed_jobs`
+--
+
+CREATE TABLE `failed_jobs` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` varchar(255) NOT NULL,
+  `connection` text NOT NULL,
+  `queue` text NOT NULL,
+  `payload` longtext NOT NULL,
+  `exception` longtext NOT NULL,
+  `failed_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `media`
+--
+
+CREATE TABLE `media` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `model_type` varchar(255) NOT NULL,
+  `model_id` bigint(20) UNSIGNED NOT NULL,
+  `uuid` char(36) DEFAULT NULL,
+  `collection_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `file_name` varchar(255) NOT NULL,
+  `mime_type` varchar(255) DEFAULT NULL,
+  `disk` varchar(255) NOT NULL,
+  `conversions_disk` varchar(255) DEFAULT NULL,
+  `size` bigint(20) UNSIGNED NOT NULL,
+  `manipulations` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`manipulations`)),
+  `custom_properties` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`custom_properties`)),
+  `generated_conversions` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`generated_conversions`)),
+  `responsive_images` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`responsive_images`)),
+  `order_column` int(10) UNSIGNED DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `migrations`
+--
+
+CREATE TABLE `migrations` (
+  `id` int(10) UNSIGNED NOT NULL,
+  `migration` varchar(255) NOT NULL,
+  `batch` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `migrations`
+--
+
+INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
+(1, '2014_10_12_000000_create_users_table', 1),
+(2, '2014_10_12_100000_create_password_resets_table', 1),
+(3, '2014_10_12_200000_add_two_factor_columns_to_users_table', 1),
+(4, '2019_08_19_000000_create_failed_jobs_table', 1),
+(5, '2019_12_14_000001_create_personal_access_tokens_table', 1),
+(6, '2022_01_08_103820_create_sessions_table', 1),
+(7, '2022_01_10_051714_create_countries_table', 1),
+(8, '2022_01_10_070509_create_cities_table', 1),
+(9, '2022_01_10_101903_create_extra_charges_table', 1),
+(10, '2022_01_10_112023_create_app_settings_table', 1),
+(11, '2022_01_11_090450_create_media_table', 1),
+(12, '2022_01_13_074756_create_orders_table', 1),
+(13, '2022_01_13_095310_create_static_data_table', 1),
+(14, '2022_01_15_084527_create_order_histories_table', 1),
+(15, '2022_01_18_100915_create_payment_gateways_table', 1),
+(16, '2022_01_19_060358_create_payments_table', 1),
+(17, '2022_01_24_104630_create_notifications_table', 1),
+(18, '2022_04_14_084202_create_documents_table', 1),
+(19, '2022_04_14_084351_create_delivery_man_documents_table', 1),
+(20, '2022_05_11_080007_add_total_parcel_orders_table', 1),
+(21, '2022_05_30_063501_add_fcm_token_to_users_table', 1),
+(22, '2022_05_31_101332_add_auto_assign_to_orders', 1),
+(23, '2022_06_02_065520_add_distance_to_app_settings', 1),
+(24, '2022_06_27_131039_add_otp_verify_on_pickup_delivery', 1),
+(25, '2022_12_05_111707_alter_cities_table', 1),
+(26, '2022_12_05_140929_create_wallets_table', 1),
+(27, '2022_12_05_140954_create_wallet_histories_table', 1),
+(28, '2022_12_05_141107_create_user_bank_accounts_table', 1),
+(29, '2022_12_06_061753_alter_payments_table', 1),
+(30, '2022_12_10_054128_create_withdraw_requests_table', 1),
+(31, '2023_01_30_121805_create_vehicles_table', 1),
+(32, '2023_01_30_131633_add_is_vehicle_in_order_in_app_settings_table', 1),
+(33, '2023_01_30_132224_add_vehicle_data_in_orders_table', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `id` char(36) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `notifiable_type` varchar(255) NOT NULL,
+  `notifiable_id` bigint(20) UNSIGNED NOT NULL,
+  `data` text NOT NULL,
+  `read_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `orders`
+--
+
+CREATE TABLE `orders` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `client_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `pickup_point` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`pickup_point`)),
+  `delivery_point` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`delivery_point`)),
+  `country_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `city_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `parcel_type` varchar(255) DEFAULT NULL,
+  `total_weight` double DEFAULT 0,
+  `total_distance` double DEFAULT 0,
+  `date` datetime DEFAULT NULL,
+  `pickup_datetime` datetime DEFAULT NULL,
+  `delivery_datetime` datetime DEFAULT NULL,
+  `parent_order_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `payment_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `reason` text DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `payment_collect_from` varchar(255) DEFAULT NULL COMMENT 'on_pickup, on_delivery',
+  `delivery_man_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `fixed_charges` double DEFAULT 0,
+  `weight_charge` double DEFAULT 0,
+  `distance_charge` double DEFAULT 0,
+  `extra_charges` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`extra_charges`)),
+  `total_amount` double DEFAULT 0,
+  `pickup_confirm_by_client` tinyint(4) DEFAULT 0 COMMENT '0-not confirm , 1 - confirm',
+  `pickup_confirm_by_delivery_man` tinyint(4) DEFAULT 0 COMMENT '0-not confirm , 1 - confirm',
+  `total_parcel` double DEFAULT NULL,
+  `vehicle_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `vehicle_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`vehicle_data`)),
+  `auto_assign` tinyint(4) DEFAULT NULL,
+  `cancelled_delivery_man_ids` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `order_histories`
+--
+
+CREATE TABLE `order_histories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `history_type` varchar(255) DEFAULT NULL,
+  `history_message` varchar(255) DEFAULT NULL,
+  `history_data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`history_data`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `password_resets`
+--
+
+CREATE TABLE `password_resets` (
+  `email` varchar(255) NOT NULL,
+  `token` varchar(255) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `payments`
+--
+
+CREATE TABLE `payments` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `client_id` bigint(20) UNSIGNED NOT NULL,
+  `order_id` bigint(20) UNSIGNED NOT NULL,
+  `datetime` datetime DEFAULT NULL,
+  `total_amount` double DEFAULT 0,
+  `payment_type` varchar(255) NOT NULL,
+  `txn_id` varchar(255) DEFAULT NULL,
+  `payment_status` varchar(255) DEFAULT NULL COMMENT 'pending, paid, failed',
+  `transaction_detail` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`transaction_detail`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL,
+  `cancel_charges` double DEFAULT 0,
+  `admin_commission` double DEFAULT 0,
+  `delivery_man_commission` double DEFAULT 0,
+  `received_by` varchar(255) DEFAULT NULL,
+  `delivery_man_fee` double DEFAULT 0,
+  `delivery_man_tip` double DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `payment_gateways`
+--
+
+CREATE TABLE `payment_gateways` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1 COMMENT '0- InActive, 1- Active',
+  `is_test` tinyint(4) DEFAULT 1 COMMENT '0-  No, 1- Yes',
+  `test_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`test_value`)),
+  `live_value` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`live_value`)),
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `personal_access_tokens`
+--
+
+CREATE TABLE `personal_access_tokens` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `tokenable_type` varchar(255) NOT NULL,
+  `tokenable_id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `token` varchar(64) NOT NULL,
+  `abilities` text DEFAULT NULL,
+  `last_used_at` timestamp NULL DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `id` varchar(255) NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `ip_address` varchar(45) DEFAULT NULL,
+  `user_agent` text DEFAULT NULL,
+  `payload` text NOT NULL,
+  `last_activity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `sessions`
+--
+
+INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('F6x2V2MFbcW6aGtHfQNey1xfVgFbJ9OIDBn71G4Z', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoieTA5UERWZHN1bkN5eFpEVmJmdndoTlllSzB6UmdGWGFjS3dSWkxrayI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1686193234),
+('nt1owfWMzjxRAOvZ1CvQFZQRWn2i7JJiW1JXAWpn', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoiZTRVNXpLOVpPSjlVMFIwalNLeUxoVWROUUJtTVQ5TGNHbDBCV2JGeSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1686193295),
+('UvNX5M52qzTeZ5XPPu21cfcTh0ubbwjWRkhVz5Q7', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'YTozOntzOjY6Il90b2tlbiI7czo0MDoiRDI1VE0wM2dVSWlLN0p2cThNcUdYN0s2RGdETDhFS3ZqVlFzQzhRcyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDY6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9fYXNzZXRzL2Zvb3Rlci9hcHBsZS5zdmciO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19', 1686193308),
+('zSdqsYB50AAGSMGTmNHNhuzjJ9EII9pM1QGQIp5R', NULL, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36', 'YToyOntzOjY6Il90b2tlbiI7czo0MDoic1BteUNKdWVxSzByemNuYXc5ekRZcjJGaHhqSUxSdnpOdVJoa2FVQiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319fQ==', 1686192982);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `static_data`
+--
+
+CREATE TABLE `static_data` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `label` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `users`
+--
+
+CREATE TABLE `users` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `username` varchar(255) NOT NULL,
+  `email_verified_at` timestamp NULL DEFAULT NULL,
+  `password` varchar(255) NOT NULL,
+  `two_factor_secret` text DEFAULT NULL,
+  `two_factor_recovery_codes` text DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `contact_number` varchar(255) DEFAULT NULL,
+  `user_type` varchar(255) DEFAULT NULL,
+  `country_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `city_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `player_id` varchar(255) DEFAULT NULL,
+  `latitude` varchar(255) DEFAULT NULL,
+  `longitude` varchar(255) DEFAULT NULL,
+  `remember_token` varchar(100) DEFAULT NULL,
+  `last_notification_seen` timestamp NULL DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1,
+  `uid` varchar(255) DEFAULT NULL,
+  `fcm_token` text DEFAULT NULL,
+  `current_team_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `profile_photo_path` varchar(2048) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Déchargement des données de la table `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `email`, `username`, `email_verified_at`, `password`, `two_factor_secret`, `two_factor_recovery_codes`, `address`, `contact_number`, `user_type`, `country_id`, `city_id`, `player_id`, `latitude`, `longitude`, `remember_token`, `last_notification_seen`, `status`, `uid`, `fcm_token`, `current_team_id`, `profile_photo_path`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(2, 'Admin', 'admin@admin.com', 'admin', NULL, '$2y$10$ahfjQI/VBvz9fUZjqjz9uOHHjsyU4rqO7wu4svu14PCCTGiAtATem', NULL, NULL, NULL, '9876543210', 'admin', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '2023-06-08 09:06:11', NULL, NULL),
+(3, 'User', 'user@test.com', 'user', NULL, '$2y$10$XFaPIEWlr6hNkZBVV/DVpe1fjsuF/XkaX2NUuwG8/r/d/l.n4N3ZC', NULL, NULL, NULL, '9876543210', 'user', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, NULL, NULL, NULL, NULL, '2023-06-08 09:06:12', NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_bank_accounts`
+--
+
+CREATE TABLE `user_bank_accounts` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `bank_name` varchar(255) DEFAULT NULL,
+  `bank_code` varchar(255) DEFAULT NULL,
+  `account_holder_name` varchar(255) DEFAULT NULL,
+  `account_number` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `vehicles`
+--
+
+CREATE TABLE `vehicles` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `title` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL COMMENT 'all,city_wise',
+  `size` varchar(255) DEFAULT NULL,
+  `city_ids` text DEFAULT NULL,
+  `capacity` varchar(255) DEFAULT NULL,
+  `status` tinyint(4) DEFAULT 1,
+  `description` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `wallets`
+--
+
+CREATE TABLE `wallets` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `total_amount` double DEFAULT 0,
+  `online_received` double DEFAULT 0,
+  `collected_cash` double DEFAULT 0,
+  `manual_received` double DEFAULT 0,
+  `total_withdrawn` double DEFAULT 0,
+  `currency` varchar(255) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `wallet_histories`
+--
+
+CREATE TABLE `wallet_histories` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL COMMENT 'credit,debit',
+  `transaction_type` varchar(255) DEFAULT NULL COMMENT 'topup,withdraw,order_fee,admin_commision,correction',
+  `currency` varchar(255) DEFAULT NULL,
+  `amount` double DEFAULT 0,
+  `balance` double DEFAULT 0,
+  `datetime` datetime DEFAULT NULL,
+  `order_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `description` text DEFAULT NULL,
+  `data` text DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `withdraw_requests`
+--
+
+CREATE TABLE `withdraw_requests` (
+  `id` bigint(20) UNSIGNED NOT NULL,
+  `user_id` bigint(20) UNSIGNED DEFAULT NULL,
+  `amount` double DEFAULT 0,
+  `currency` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT 'requested' COMMENT 'requested,approved,decline',
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
+  `deleted_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `app_settings`
+--
+ALTER TABLE `app_settings`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `cities`
+--
+ALTER TABLE `cities`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `countries`
+--
+ALTER TABLE `countries`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `delivery_man_documents`
+--
+ALTER TABLE `delivery_man_documents`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `delivery_man_documents_document_id_foreign` (`document_id`),
+  ADD KEY `delivery_man_documents_delivery_man_id_foreign` (`delivery_man_id`);
+
+--
+-- Index pour la table `documents`
+--
+ALTER TABLE `documents`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `extra_charges`
+--
+ALTER TABLE `extra_charges`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`);
+
+--
+-- Index pour la table `media`
+--
+ALTER TABLE `media`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `media_uuid_unique` (`uuid`),
+  ADD KEY `media_model_type_model_id_index` (`model_type`,`model_id`),
+  ADD KEY `media_order_column_index` (`order_column`);
+
+--
+-- Index pour la table `migrations`
+--
+ALTER TABLE `migrations`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `notifications_notifiable_type_notifiable_id_index` (`notifiable_type`,`notifiable_id`);
+
+--
+-- Index pour la table `orders`
+--
+ALTER TABLE `orders`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `orders_client_id_foreign` (`client_id`);
+
+--
+-- Index pour la table `order_histories`
+--
+ALTER TABLE `order_histories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `order_histories_order_id_foreign` (`order_id`);
+
+--
+-- Index pour la table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`);
+
+--
+-- Index pour la table `payments`
+--
+ALTER TABLE `payments`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `payments_client_id_foreign` (`client_id`),
+  ADD KEY `payments_order_id_foreign` (`order_id`);
+
+--
+-- Index pour la table `payment_gateways`
+--
+ALTER TABLE `payment_gateways`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `personal_access_tokens_token_unique` (`token`),
+  ADD KEY `personal_access_tokens_tokenable_type_tokenable_id_index` (`tokenable_type`,`tokenable_id`);
+
+--
+-- Index pour la table `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `sessions_user_id_index` (`user_id`),
+  ADD KEY `sessions_last_activity_index` (`last_activity`);
+
+--
+-- Index pour la table `static_data`
+--
+ALTER TABLE `static_data`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `users_email_unique` (`email`),
+  ADD UNIQUE KEY `users_username_unique` (`username`);
+
+--
+-- Index pour la table `user_bank_accounts`
+--
+ALTER TABLE `user_bank_accounts`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `user_bank_accounts_user_id_foreign` (`user_id`);
+
+--
+-- Index pour la table `vehicles`
+--
+ALTER TABLE `vehicles`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `wallets`
+--
+ALTER TABLE `wallets`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `wallets_user_id_foreign` (`user_id`);
+
+--
+-- Index pour la table `wallet_histories`
+--
+ALTER TABLE `wallet_histories`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `wallet_histories_user_id_foreign` (`user_id`),
+  ADD KEY `wallet_histories_order_id_foreign` (`order_id`);
+
+--
+-- Index pour la table `withdraw_requests`
+--
+ALTER TABLE `withdraw_requests`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `withdraw_requests_user_id_foreign` (`user_id`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `app_settings`
+--
+ALTER TABLE `app_settings`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `cities`
+--
+ALTER TABLE `cities`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `countries`
+--
+ALTER TABLE `countries`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1001;
+
+--
+-- AUTO_INCREMENT pour la table `delivery_man_documents`
+--
+ALTER TABLE `delivery_man_documents`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `documents`
+--
+ALTER TABLE `documents`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `extra_charges`
+--
+ALTER TABLE `extra_charges`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `failed_jobs`
+--
+ALTER TABLE `failed_jobs`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `media`
+--
+ALTER TABLE `media`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `migrations`
+--
+ALTER TABLE `migrations`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+
+--
+-- AUTO_INCREMENT pour la table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `order_histories`
+--
+ALTER TABLE `order_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `payments`
+--
+ALTER TABLE `payments`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `payment_gateways`
+--
+ALTER TABLE `payment_gateways`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `personal_access_tokens`
+--
+ALTER TABLE `personal_access_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `static_data`
+--
+ALTER TABLE `static_data`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT pour la table `user_bank_accounts`
+--
+ALTER TABLE `user_bank_accounts`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `vehicles`
+--
+ALTER TABLE `vehicles`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `wallets`
+--
+ALTER TABLE `wallets`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `wallet_histories`
+--
+ALTER TABLE `wallet_histories`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `withdraw_requests`
+--
+ALTER TABLE `withdraw_requests`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `delivery_man_documents`
+--
+ALTER TABLE `delivery_man_documents`
+  ADD CONSTRAINT `delivery_man_documents_delivery_man_id_foreign` FOREIGN KEY (`delivery_man_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `delivery_man_documents_document_id_foreign` FOREIGN KEY (`document_id`) REFERENCES `documents` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `orders`
+--
+ALTER TABLE `orders`
+  ADD CONSTRAINT `orders_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `order_histories`
+--
+ALTER TABLE `order_histories`
+  ADD CONSTRAINT `order_histories_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `payments`
+--
+ALTER TABLE `payments`
+  ADD CONSTRAINT `payments_client_id_foreign` FOREIGN KEY (`client_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `payments_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `user_bank_accounts`
+--
+ALTER TABLE `user_bank_accounts`
+  ADD CONSTRAINT `user_bank_accounts_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `wallets`
+--
+ALTER TABLE `wallets`
+  ADD CONSTRAINT `wallets_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `wallet_histories`
+--
+ALTER TABLE `wallet_histories`
+  ADD CONSTRAINT `wallet_histories_order_id_foreign` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `wallet_histories_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Contraintes pour la table `withdraw_requests`
+--
+ALTER TABLE `withdraw_requests`
+  ADD CONSTRAINT `withdraw_requests_user_id_foreign` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
