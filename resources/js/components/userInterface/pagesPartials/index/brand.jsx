@@ -1,79 +1,51 @@
 import { useEffect, useState } from "react";
 import { getWithAxios } from "@/components/api/axios";
-import Select from 'react-select'
+import Select from "react-select";
+import { BsEnvelope } from "react-icons/bs";
 
 const Brand = () => {
-
     const [countries, setCountries] = useState();
 
     const getCountries = async () => {
         const data = await getWithAxios("/api/country-list");
-      
+
         if (data.status == "success") {
             setCountries(data.data.countries);
         }
     };
 
-
     useEffect(() => {
-        getCountries()
-    },[])
+        getCountries();
+    }, []);
 
     return (
         <div className="bg-gradient-to-b from-[#007bff] to-[#004691] pb-24 px-24">
-            <div className="text-[4rem] text-white font-bold" >
+            <div className="text-[4rem] text-white font-bold">
                 We make shipping easy
             </div>
-            <div className="text-white text-3xl">
+            <div className=" text-white text-3xl ">
                 Immediate prices, easy booking
             </div>
             <div>
-                <div class="styles_card__q54pd styles_noPadding__oh_B4 styles_biggerRadiusDesktop__d7e_z">
-                    <div class="w-full grid gap-8 px-4 md:grid-cols-4">
-                       <div className="form-group">
-                        <label className="form-label font-bold">FROM</label>
-                       <Select options={countries} />
-                       </div>
+                <div class="grid bg-white rounded-lg md:grid-cols-5">
+                    <div class="md:col-span-4 w-full grid rounded-t-lg md:rounded-l-lg gap-8 px-4 py-2 md:grid-cols-3">
+                        <div className="form-group">
+                            <label className="form-label font-bold">FROM</label>
+                            <Select options={countries} />
+                        </div>
 
-                       <div>
-                        <label>FROM</label>
-                       <Select options={countries} />
-                       </div>
+                        <div>
+                            <label>To</label>
+                            <Select options={countries} />
+                        </div>
 
+                        <Services />
                     </div>
-                </div>
-                <div class="styles_priceSection__1ELMs">
-                    <div class="styles_priceTag__wHWE_ styles_onRequest__F04dw">
-                        On request
+                    <div className="w-full bg-blue-600 rounded-b-lg md:rounded-r-lg">
+                        <button className="h-full w-full text-white font-bold bg-blue-600 rounded-b-lg md:rounded-r-lg hover:bg-blue-">
+                            Create order
+                        </button>
                     </div>
-                    <a
-                        data-testid="button"
-                        class="styles_submit__E_zzY styles_button__eH6h8 styles_primary___lodd"
-                        color="primary"
-                        href="#"
-                    >
-                        Start shipping
-                        <span
-                            class="styles_buttonIcon__AjG0n styles_right__Hn3fE"
-                            style={{ "width": "14px", "height": "14px" }}
-                        >
-                            <svg
-                                aria-hidden="true"
-                                focusable="false"
-                                data-prefix="fas"
-                                data-icon="arrow-right"
-                                class="svg-inline--fa fa-arrow-right "
-                                role="img"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 448 512"
-                            >
-                                <path
-                                    fill="currentColor"
-                                    d="M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"
-                                ></path>
-                            </svg>
-                        </span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -81,3 +53,54 @@ const Brand = () => {
 };
 
 export default Brand;
+
+const Services = () => {
+    const services = [
+        {
+            icon: <BsEnvelope className="text-3xl" />,
+            title: "Document",
+            subtitle: "Personal IDs and paper documents",
+        },
+
+        {
+            icon: <BsEnvelope className="text-3xl" />,
+            title: "Package",
+            subtitle: "Box up to 70Kg",
+        },
+
+        {
+            icon: <BsEnvelope className="text-3xl" />,
+            title: "Document",
+            subtitle: "Personal IDs and paper documents",
+        },
+
+        {
+            icon: <BsEnvelope className="text-3xl" />,
+            title: "Document",
+            subtitle: "Personal IDs and paper documents",
+        },
+    ];
+    return (
+        <div className="form-group">
+            <label htmlFor="">Service</label>
+            <select name="" id="" className="custom-select">
+                <option value="" className="text-gray-400">
+                    Select a service
+                </option>
+                {services.map((service, index) => (
+                    <option key={index} value={service.title} className="py-4 ">
+                        <div className="flex gap-4">
+                            <div>icon : {service.icon}</div>
+                            <div className=" py-2">
+                                <div className="">{service.title}</div>
+                                <div className="text-gray-400">
+                                    {service.subtitle}
+                                </div>
+                            </div>
+                        </div>
+                    </option>
+                ))}
+            </select>
+        </div>
+    );
+};
